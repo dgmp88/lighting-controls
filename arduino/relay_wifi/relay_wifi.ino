@@ -1,9 +1,17 @@
 /* 
+*  Mashed together by George in 2014.
+*  
 *  Vast majority of this is ripped straight from here:
 *  https://www.openhomeautomation.net/wireless-relay-arduino-wifi/
 *  
 *  which uses the brilliant API here:
 *  https://github.com/marcoschwartz/aREST
+*  
+*  With some bits taken from here:
+*  https://learn.adafruit.com/rgb-led-strips/overview
+*  
+*  Particularly this very useful wiring diagram:
+*  https://learn.adafruit.com/rgb-led-strips/usage
 *  
 */
 
