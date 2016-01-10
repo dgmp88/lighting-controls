@@ -20,15 +20,15 @@ class MainHandler(PiLightingHandler):
                     brightness_g=self.lighting_settings['brightness_rgb'][1],
                     brightness_b=self.lighting_settings['brightness_rgb'][2])
 
-class ChangeValuesHandler(tornado.web.RequestHandler):
+class ChangeValuesHandler(PiLightingHandler):
     def post(self):
         self.lighting_settings['brightness_rgb'] = [self.get_argument('brightness_r'),
                                                 self.get_argument('brightness_g'),
                                                 self.get_argument('brightness_b')]
 
         # Convert all values to integers
-        for idx, val in enumerate(lighting_settings['brightness_rgb']):
+        for idx, val in enumerate(self.lighting_settings['brightness_rgb']):
             self.lighting_settings['brightness_rgb'][idx] = int(val)
-            self.lighting_controls[i].ChangeDutyCycle(val)
+            self.lighting_controls[idx].ChangeDutyCycle(int(val))
 
         self.redirect("/")

@@ -23,7 +23,7 @@ def get_gpio_controls():
     GPIO.setup(blue_id, GPIO.OUT)# set GPIO 24 as output for red led
 
     # Create the PWM object at specified frequency
-    freq = 200
+    freq = 500
     red = GPIO.PWM(red_id, freq)
     green = GPIO.PWM(green_id, freq)
     blue = GPIO.PWM(blue_id, freq)
@@ -39,8 +39,8 @@ def get_gpio_controls():
 
 
 def make_app():
-    inputs = {lighting_settings: {'brightness_rgb': [0, 0, 0]},
-              lighting_controls: get_gpio_controls()}
+    inputs = {'lighting_settings': {'brightness_rgb': [0, 0, 0]},
+              'lighting_controls': get_gpio_controls()}
 
     handlers = [
         (r"/", MainHandler, inputs),
@@ -59,5 +59,5 @@ def make_app():
 
 if __name__ == "__main__":
     app = make_app()
-    app.listen(8888)
+    app.listen(80)
     tornado.ioloop.IOLoop.current().start()
