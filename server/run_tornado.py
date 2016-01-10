@@ -1,46 +1,33 @@
 import tornado.ioloop
 import tornado.web
 import os
-import json
-import requests
-
+import time
 
 from handlers import ChangeValuesHandler, MainHandler
 
-def get_gpio_controls():
-    import RPi.GPIO as GPIO # always needed with RPi.GPIO
-    from time import sleep  # pull in the sleep function from time module
+import pigpio
+pgpio_obj = pigpio.pi() # connect to local Pi
 
-    GPIO.setmode(GPIO.BCM)  # choose BCM or BOARD numbering schemes. I use BCM
+red_pin = 2
+green_pin = 24
+blue_pin = 3
 
-    red_id = 2
-    green_id = 24
-    blue_id = 3
+def start_tornado(app):
+    app.listen(80)
+    print "Starting Torando"
+    tornado.ioloop.IOLoop.instance().start()
+    print "Tornado finished"
 
-
-    GPIO.setup(red_id, GPIO.OUT)# set GPIO 25 as output for white led
-    GPIO.setup(green_id, GPIO.OUT)# set GPIO 24 as output for red led
-    GPIO.setup(blue_id, GPIO.OUT)# set GPIO 24 as output for red led
-
-    # Create the PWM object at specified frequency
-    freq = 500
-    red = GPIO.PWM(red_id, freq)
-    green = GPIO.PWM(green_id, freq)
-    blue = GPIO.PWM(blue_id, freq)
-
-    # Initiate all bulbs off
-    red.start(0)
-    green.start(0)
-    blue.start(0)
-
-    controls = [red, green, blue]
-
-    return controls
-
+def stop_tornado():
+    pgpio_obj.stop()
+    ioloop = tornado.ioloop.IOLoop.instance()
+    ioloop.add_callback(ioloop.stop)
+    print "Asked Tornado to exit"
 
 def make_app():
     inputs = {'lighting_settings': {'brightness_rgb': [0, 0, 0]},
-              'lighting_controls': get_gpio_controls()}
+              'pgpio_obj': pgpio_obj,
+              'pins': [red_pin, green_pin, blue_pin]}
 
     handlers = [
         (r"/", MainHandler, inputs),
@@ -50,7 +37,6 @@ def make_app():
     DEBUG = False
     if os.environ.get("DEBUG") == "True":
         DEBUG = True
-
     settings = {
         'static_path': os.path.join(os.path.dirname(__file__), 'static')
     }
@@ -59,5 +45,9 @@ def make_app():
 
 if __name__ == "__main__":
     app = make_app()
-    app.listen(80)
-    tornado.ioloop.IOLoop.current().start()
+    start_tornado(app)
+
+    while True:
+        time.sleep(1)
+    except KeyboardInterrupt:
+        stop_tornado()

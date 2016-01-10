@@ -5,11 +5,13 @@ import json
 import requests
 
 class PiLightingHandler(tornado.web.RequestHandler):
-    lighting_controls = None
+    pgpio_obj = None
+    pins = None
     lighting_settings = None
-    
-    def initialize(self, lighting_controls, lighting_settings):
-        self.lighting_controls = lighting_controls
+
+    def initialize(self, pgpio_obj, lighting_settings, pins):
+        self.pgpio_obj = pgpio_obj
+        self.pins = pins
         self.lighting_settings = lighting_settings
 
 
@@ -29,6 +31,6 @@ class ChangeValuesHandler(PiLightingHandler):
         # Convert all values to integers
         for idx, val in enumerate(self.lighting_settings['brightness_rgb']):
             self.lighting_settings['brightness_rgb'][idx] = int(val)
-            self.lighting_controls[idx].ChangeDutyCycle(int(val))
+            self.pi.set_PWM_dutycycle(self.pins[idx], int(val))
 
         self.redirect("/")
