@@ -1,6 +1,6 @@
 # lighting-controls
 
-## server 
+## server
 this folder contains a simple tornado app with some controls for lights
 
 ## arduino

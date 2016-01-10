@@ -4,41 +4,47 @@ import os
 import json
 import requests
 
-changed = 0
 
-lighting_settings = {'brightness_rgb': [50, 50, 50]}
-ip_settings = json.load(open("secret_stuff.json"))
-arduino_set_rgb_endpoint = ip_settings['arduino_set_rgb']
+from handlers import ChangeValuesHandler, MainHandler
 
-class MainHandler(tornado.web.RequestHandler):
-    def get(self):
-        self.render("templates/index.html",
-                    brightness_r=lighting_settings['brightness_rgb'][0],
-                    brightness_g=lighting_settings['brightness_rgb'][1],
-                    brightness_b=lighting_settings['brightness_rgb'][2])
+def get_gpio_controls():
+    import RPi.GPIO as GPIO # always needed with RPi.GPIO
+    from time import sleep  # pull in the sleep function from time module
+
+    GPIO.setmode(GPIO.BCM)  # choose BCM or BOARD numbering schemes. I use BCM
+
+    red_id = 2
+    green_id = 24
+    blue_id = 3
 
 
-class ChangeValuesHandler(tornado.web.RequestHandler):
-    def post(self):
-        lighting_settings['brightness_rgb'] = [self.get_argument('brightness_r'),
-                                                self.get_argument('brightness_g'),
-                                                self.get_argument('brightness_b')]
-        for idx, val in enumerate(lighting_settings['brightness_rgb']):
-            lighting_settings['brightness_rgb'][idx] = int(val)
+    GPIO.setup(red_id, GPIO.OUT)# set GPIO 25 as output for white led
+    GPIO.setup(green_id, GPIO.OUT)# set GPIO 24 as output for red led
+    GPIO.setup(blue_id, GPIO.OUT)# set GPIO 24 as output for red led
 
-        end_vals = '%03d%03d%03d' % (lighting_settings['brightness_rgb'][0],
-                                     lighting_settings['brightness_rgb'][1],
-                                     lighting_settings['brightness_rgb'][2])
-        set_url = arduino_set_rgb_endpoint + end_vals
+    # Create the PWM object at specified frequency
+    freq = 200
+    red = GPIO.PWM(red_id, freq)
+    green = GPIO.PWM(green_id, freq)
+    blue = GPIO.PWM(blue_id, freq)
 
-        requests.get(set_url)
+    # Initiate all bulbs off
+    red.start(0)
+    green.start(0)
+    blue.start(0)
 
-        self.redirect("/")
+    controls = [red, green, blue]
+
+    return controls
+
 
 def make_app():
+    inputs = {lighting_settings: {'brightness_rgb': [0, 0, 0]},
+              lighting_controls: get_gpio_controls()}
+
     handlers = [
-        (r"/", MainHandler),
-        (r"/dochange/", ChangeValuesHandler),
+        (r"/", MainHandler, inputs),
+        (r"/dochange/", ChangeValuesHandler, inputs),
     ]
 
     DEBUG = False
