@@ -31,6 +31,6 @@ class ChangeValuesHandler(PiLightingHandler):
         # Convert all values to integers
         for idx, val in enumerate(self.lighting_settings['brightness_rgb']):
             self.lighting_settings['brightness_rgb'][idx] = int(val)
-            self.pi.set_PWM_dutycycle(self.pins[idx], int(val))
+            self.pgpio_obj.set_PWM_dutycycle(self.pins[idx], int(val))
 
         self.redirect("/")

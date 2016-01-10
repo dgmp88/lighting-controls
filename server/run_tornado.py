@@ -13,7 +13,7 @@ green_pin = 24
 blue_pin = 3
 
 def start_tornado(app):
-    app.listen(80)
+    app.listen(8887)
     print "Starting Torando"
     tornado.ioloop.IOLoop.instance().start()
     print "Tornado finished"
@@ -47,7 +47,8 @@ if __name__ == "__main__":
     app = make_app()
     start_tornado(app)
 
-    while True:
-        time.sleep(1)
+    try:
+	while True:
+      	    time.sleep(1)
     except KeyboardInterrupt:
         stop_tornado()
