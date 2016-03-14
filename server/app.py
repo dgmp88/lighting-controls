@@ -13,10 +13,15 @@ green_pin = 24
 blue_pin = 3
 
 def start_tornado(app):
-    app.listen(8887)
+    app.listen(80)
     print "Starting Torando"
     tornado.ioloop.IOLoop.instance().start()
     print "Tornado finished"
+
+def switch_off():
+    pgpio_obj.set_PWM_dutycycle(red_pin, 0)
+    pgpio_obj.set_PWM_dutycycle(green_pin, 0)
+    pgpio_obj.set_PWM_dutycycle(blue_pin, 0)
 
 def stop_tornado():
     pgpio_obj.stop()
@@ -46,9 +51,10 @@ def make_app():
 if __name__ == "__main__":
     app = make_app()
     start_tornado(app)
-
+    switch_off()
     try:
 	while True:
       	    time.sleep(1)
+            print 'hi'
     except KeyboardInterrupt:
         stop_tornado()

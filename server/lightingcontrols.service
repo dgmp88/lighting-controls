@@ -1,0 +1,13 @@
+[Unit]
+Description=lighting-controls service daemon
+
+[Service]
+ExecStart=/home/pi/lighting-controls/server/run.sh
+
+WorkingDirectory=/home/pi/lighting-controls/server
+
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+

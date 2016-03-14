@@ -34,3 +34,5 @@ class ChangeValuesHandler(PiLightingHandler):
             self.pgpio_obj.set_PWM_dutycycle(self.pins[idx], int(val))
 
         self.redirect("/")
+
+
