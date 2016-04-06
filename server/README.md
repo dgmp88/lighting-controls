@@ -7,5 +7,8 @@
 3. I followed [this tutorial](http://twistedmatrix.com/documents/13.2.0/core/howto/systemd.html) to get systemd to start a dameon to run the server on boot.
 
 Copy this to here: 
-sudo cp lightingcontrols.service /etc/systemd/system/
+```sudo cp lightingcontrols.service /etc/systemd/system/```
+
+Start it with 
+```sudo systemctl start lightingcontrols.service```
 
