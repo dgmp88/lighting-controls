@@ -18,21 +18,25 @@ class PiLightingHandler(tornado.web.RequestHandler):
 class MainHandler(PiLightingHandler):
     def get(self):
         self.render("templates/index.html",
-                    brightness_r=self.lighting_settings['brightness_rgb'][0],
-                    brightness_g=self.lighting_settings['brightness_rgb'][1],
-                    brightness_b=self.lighting_settings['brightness_rgb'][2])
+                r=self.lighting_settings['brightness_rgb'][0],
+                g=self.lighting_settings['brightness_rgb'][1],
+                b=self.lighting_settings['brightness_rgb'][2])
 
 class ChangeValuesHandler(PiLightingHandler):
     def post(self):
-        self.lighting_settings['brightness_rgb'] = [self.get_argument('brightness_r'),
-                                                self.get_argument('brightness_g'),
-                                                self.get_argument('brightness_b')]
-
-        # Convert all values to integers
-        for idx, val in enumerate(self.lighting_settings['brightness_rgb']):
-            self.lighting_settings['brightness_rgb'][idx] = int(val)
-            self.pgpio_obj.set_PWM_dutycycle(self.pins[idx], int(val))
-
-        self.redirect("/")
+        default_change(self)
+    def get(self):
+        default_change(self)
 
 
+def default_change(handler):
+    handler.lighting_settings['rgb'] = [handler.get_argument('r'),
+            handler.get_argument('g'),
+            handler.get_argument('b')]
+
+    # Convert all values to integers
+    for idx, val in enumerate(handler.lighting_settings['rgb']):
+        handler.lighting_settings['rgb'][idx] = int(val)
+        handler.pgpio_obj.set_PWM_dutycycle(handler.pins[idx], int(val))
+
+    handler.redirect('/')

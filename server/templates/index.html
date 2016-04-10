@@ -35,14 +35,15 @@
             <div class="l-box-lrg pure-u-1 pure-u-md-2-5">
                 <form action="/dochange/" method="POST" class="pure-form pure-form-stacked">
                     <fieldset>
-                        <input action="/dochange/" method="POST" type="range" name="brightness_r" value="{{ brightness_r }}" min="0" max="255" step="1">
-                        <input action="/dochange/" method="POST" type="range" name="brightness_g" value="{{ brightness_g }}" min="0" max="255" step="1">
-                        <input action="/dochange/" method="POST" type="range" name="brightness_b" value="{{ brightness_b }}" min="0" max="255" step="1">
+                        <input action="/dochange/" method="POST" type="range" name="r" value="{{ r }}" min="0" max="255" step="1">
+                        <input action="/dochange/" method="POST" type="range" name="g" value="{{ g }}" min="0" max="255" step="1">
+                        <input action="/dochange/" method="POST" type="range" name="b" value="{{ b }}" min="0" max="255" step="1">
                         <button type="submit" class="apply pure-button apply">Apply</button>
                     </fieldset>
                 </form>
             </div>
 
+            <a href="/dochange/?r=0&g=0&b=0"><button type="submit" class="apply pure-button apply">Off</button></a>
             <div class="l-box-lrg pure-u-1 pure-u-md-3-5">
                 <h4>Controls!</h4>
                 <p>
