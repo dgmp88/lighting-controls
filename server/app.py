@@ -30,7 +30,7 @@ def stop_tornado():
     print "Asked Tornado to exit"
 
 def make_app():
-    inputs = {'lighting_settings': {'brightness_rgb': [0, 0, 0]},
+    inputs = {'lighting_settings': {'rgb': [0, 0, 0]},
               'pgpio_obj': pgpio_obj,
               'pins': [red_pin, green_pin, blue_pin]}
 

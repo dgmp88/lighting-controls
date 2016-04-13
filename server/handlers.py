@@ -17,10 +17,11 @@ class PiLightingHandler(tornado.web.RequestHandler):
 
 class MainHandler(PiLightingHandler):
     def get(self):
+        print self.lighting_settings['rgb']
         self.render("templates/index.html",
-                r=self.lighting_settings['brightness_rgb'][0],
-                g=self.lighting_settings['brightness_rgb'][1],
-                b=self.lighting_settings['brightness_rgb'][2])
+                r=self.lighting_settings['rgb'][0],
+                g=self.lighting_settings['rgb'][1],
+                b=self.lighting_settings['rgb'][2])
 
 class ChangeValuesHandler(PiLightingHandler):
     def post(self):
